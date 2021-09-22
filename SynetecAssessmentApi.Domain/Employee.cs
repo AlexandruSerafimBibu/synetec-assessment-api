@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace SynetecAssessmentApi.Domain
+namespace SynetecAssessment.Domain
 {
     public class Employee : Entity
     {

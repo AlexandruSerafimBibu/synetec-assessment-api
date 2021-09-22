@@ -1,3 +1,4 @@
+using AutoMapper;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
@@ -5,7 +6,9 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
-using SynetecAssessmentApi.Persistence;
+using SynetecAssessment.Api.Services.Mapper;
+using SynetecAssessment.Persistence;
+using SynetecAssessmentApi.Services;
 
 namespace SynetecAssessmentApi
 {
@@ -22,6 +25,15 @@ namespace SynetecAssessmentApi
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
+
+            var mappingConfig = new MapperConfiguration(mc =>
+            {
+                mc.AddProfile(new MapperProfile());
+            });
+
+            IMapper mapper = mappingConfig.CreateMapper();
+            services.AddSingleton(mapper);
+
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "SynetecAssessmentApi", Version = "v1" });
@@ -29,6 +41,11 @@ namespace SynetecAssessmentApi
 
             services.AddDbContext<AppDbContext>(options =>
                 options.UseInMemoryDatabase(databaseName: "HrDb"));
+
+
+            //Used this to inject the services into controllers.
+            services.AddTransient<IBonusPoolService, BonusPoolService>();
+            services.AddTransient<IEmployeeService, EmployeeService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

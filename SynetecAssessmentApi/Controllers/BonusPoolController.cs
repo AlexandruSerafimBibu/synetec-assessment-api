@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using SynetecAssessmentApi.Dtos;
 using SynetecAssessmentApi.Services;
+using System;
+using System.Net;
 using System.Threading.Tasks;
 
 namespace SynetecAssessmentApi.Controllers
@@ -8,22 +10,34 @@ namespace SynetecAssessmentApi.Controllers
     [Route("api/[controller]")]
     public class BonusPoolController : Controller
     {
-        [HttpGet]
-        public async Task<IActionResult> GetAll()
-        {
-            var bonusPoolService = new BonusPoolService();
-
-            return Ok(await bonusPoolService.GetEmployeesAsync());
-        }
-
+        private readonly IBonusPoolService _bonusPoolService;
+        
+		public BonusPoolController(IBonusPoolService bonusPoolService)
+		{
+			_bonusPoolService = bonusPoolService ?? throw new ArgumentNullException(nameof(bonusPoolService));
+		}
+		
         [HttpPost()]
-        public async Task<IActionResult> CalculateBonus([FromBody] CalculateBonusDto request)
-        {
-            var bonusPoolService = new BonusPoolService();
-
-            return Ok(await bonusPoolService.CalculateAsync(
+        [ProducesResponseType((int)HttpStatusCode.OK)]
+        [ProducesResponseType((int)HttpStatusCode.BadRequest)]
+        public async Task<IActionResult> CalculateBonusForEmployee([FromBody] CalculateBonusDto request)
+		{
+			try
+			{
+                BonusPoolCalculatorResultDto bonusPoolCalculatorResult = await _bonusPoolService.CalculateBonusForEmployeeAsync(
                 request.TotalBonusPoolAmount,
-                request.SelectedEmployeeId));
+                request.SelectedEmployeeId);
+                if (bonusPoolCalculatorResult == null)
+                {
+                    throw new Exception($"SelectedEmployeeId is not specified or employee with Id {request.SelectedEmployeeId} does not exist.");
+                }
+
+                return Ok(bonusPoolCalculatorResult);
+            }
+            catch(Exception e)
+			{
+                return BadRequest($"Something went wrong. {e.Message}. Inner exception: {e.InnerException}");
+			}
         }
     }
 }
