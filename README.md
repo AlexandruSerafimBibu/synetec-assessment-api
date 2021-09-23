@@ -1,8 +1,19 @@
-# Synetec Basic .Net API assessement
-
 ## Serafim's notes
 
 I refactored the code to the best of my abilities. For UnitTesting I used the NUnit framework. If it dosn't work, try installing "NUnit 3 Test Adapter" visual studio extension.
+First of all I started implementing two separate services (One for Employees and one for BonusPool) and inject them in the controller. I also created two controllers. One for Employees and one for the BonusPool. Both of them  return either Ok or BadRequest.
+
+I created a folder with Utils.cs that contains the Calculator logic. Noticing the pdf had used decimal numbers I changed most properties and variables involved in calculating the bonus to decimal.
+
+I used AutoMapper package to map DbEntities to their specific Dtos.
+
+I changed some namespaces and renamed the api project.
+
+I tried using async await where it's needed, except the UnitTesting classes. I'm not too familiar with UnitTesting at this point in time.
+
+My coding style is in a continuous learning curve. I try writing clean code, easy to understand and adhering to the SOLID principles.
+
+# Synetec Basic .Net API assessement
 
 This is Synetec's basic API developer assessment.
 
