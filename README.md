@@ -1,5 +1,9 @@
 # Synetec Basic .Net API assessement
 
+## Serafim's notes
+
+I refactored the code to the best of my abilities. For UnitTesting I used the NUnit framework. If it dosn't work, try installing "NUnit 3 Test Adapter" visual studio extension.
+
 This is Synetec's basic API developer assessment.
 
 If you are reading this, you most probably have been asked to complete this assessment as part of Synetec's interview process.
